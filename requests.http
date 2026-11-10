@@ -1,0 +1,38 @@
+### Criar usuário
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{ "name": "Ana", "email": "ana@example.com" }
+
+### Listar usuários
+GET http://localhost:3000/users
+
+### Buscar usuário
+GET http://localhost:3000/users/1
+
+### Atualizar usuário
+PATCH http://localhost:3000/users/1
+Content-Type: application/json
+
+{ "name": "Ana Maria" }
+
+### Excluir usuário
+DELETE http://localhost:3000/users/1
+
+### Criar pedido
+POST http://localhost:3000/orders
+Content-Type: application/json
+
+{ "userId": 1, "description": "Notebook Dell", "total": 4500 }
+
+### Criar pedido que falha no Notifications e vai para a DLQ
+POST http://localhost:3000/orders
+Content-Type: application/json
+
+{ "userId": 1, "description": "Teste DLQ", "total": 9999 }
+
+### Listar pedidos
+GET http://localhost:3000/orders
+
+### Buscar pedido
+GET http://localhost:3000/orders/1

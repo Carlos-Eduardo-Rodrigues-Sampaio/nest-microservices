@@ -1,0 +1,26 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../../generated/orders"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Order {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  description String
+  total       Decimal  @db.Decimal(10, 2)
+  createdAt   DateTime @default(now())
+}
+
+model OutboxEvent {
+  id          String    @id @default(uuid())
+  eventType   String
+  payload     Json
+  createdAt   DateTime  @default(now())
+  publishedAt DateTime?
+
+  @@index([publishedAt, createdAt])
+}

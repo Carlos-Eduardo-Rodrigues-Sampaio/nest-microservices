@@ -1,0 +1,56 @@
+{
+  "name": "nest-microservices",
+  "version": "1.0.0",
+  "description": "NestJS microservices: API Gateway, Users, Orders, Notifications (Prisma, PostgreSQL, RabbitMQ)",
+  "private": true,
+  "license": "UNLICENSED",
+  "scripts": {
+    "build": "nest build api-gateway && nest build users && nest build orders && nest build notifications",
+    "start:dev": "nest start --watch",
+    "start:prod:users": "node dist/apps/users/apps/users/src/main",
+    "start:prod:orders": "node dist/apps/orders/apps/orders/src/main",
+    "start:prod:notifications": "node dist/apps/notifications/apps/notifications/src/main",
+    "start:prod:api-gateway": "node dist/apps/api-gateway/apps/api-gateway/src/main",
+    "dev": "concurrently -n users,orders,notifications,gateway -c blue,green,yellow,magenta \"nest start users --watch\" \"nest start orders --watch\" \"nest start notifications --watch\" \"nest start api-gateway --watch\"",
+    "infra:up": "docker compose up -d --wait",
+    "infra:down": "docker compose down",
+    "prisma:generate": "prisma generate --config prisma/users.config.ts && prisma generate --config prisma/orders.config.ts && prisma generate --config prisma/notifications.config.ts",
+    "prisma:migrate:deploy": "prisma migrate deploy --config prisma/users.config.ts && prisma migrate deploy --config prisma/orders.config.ts && prisma migrate deploy --config prisma/notifications.config.ts",
+    "prisma:migrate:dev:users": "prisma migrate dev --config prisma/users.config.ts",
+    "prisma:migrate:dev:orders": "prisma migrate dev --config prisma/orders.config.ts",
+    "prisma:migrate:dev:notifications": "prisma migrate dev --config prisma/notifications.config.ts",
+    "rabbit:setup": "node --env-file=.env scripts/setup-rabbitmq.cjs",
+    "setup": "npm run infra:up && npm run prisma:generate && npm run prisma:migrate:deploy && npm run rabbit:setup"
+  },
+  "dependencies": {
+    "@nestjs/common": "^11.1.0",
+    "@nestjs/core": "^11.1.0",
+    "@nestjs/microservices": "^11.1.0",
+    "@nestjs/platform-express": "^11.1.0",
+    "@nestjs/schedule": "^6.1.0",
+    "@prisma/adapter-pg": "7.10.1",
+    "@prisma/client": "7.10.1",
+    "amqp-connection-manager": "^4.1.14",
+    "amqplib": "^0.10.9",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.2",
+    "dotenv": "^17.2.0",
+    "pg": "^8.16.0",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^11.0.0",
+    "@nestjs/schematics": "^11.0.0",
+    "@types/amqplib": "^0.10.7",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.0.0",
+    "@types/pg": "^8.15.0",
+    "concurrently": "^9.2.0",
+    "prisma": "7.10.1",
+    "typescript": "~5.9.3"
+  },
+  "engines": {
+    "node": ">=20.19"
+  }
+}
